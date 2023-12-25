@@ -571,13 +571,13 @@ static void handleAuthenticationResponse(SgsnInfo *si, L3GmmMsgAuthenticationRes
                 // verify SRES 
 		bool success = false;
  
-                try {
-                        SIPEngine engine(gConfig.getStr("SIP.Proxy.Registration").c_str(),IMSI.c_str());
-                        LOG(ERR)("waiting for registration on IMSI: " << IMSI);
-                        string SRESstr = armsg.mSRES.hexstr();
-                        success = engine.Register(SIPEngine::SIPRegister, &RAND, IMSI.c_str(), SRESstr.c_str());
-                }
-                catch(SIPTimeout) {
+            //    try {
+           //             SIPEngine engine(gConfig.getStr("SIP.Proxy.Registration").c_str(),IMSI.c_str());
+         //               LOG(ERR)("waiting for registration on IMSI: " << IMSI);
+          //              string SRESstr = armsg.mSRES.hexstr();
+          //              success = engine.Register(SIPEngine::SIPRegister, &RAND, IMSI.c_str(), SRESstr.c_str());
+          //      }
+           //     catch(SIPTimeout) {
                         LOG(ERR)("SIP authentication timed out.  Is the proxy running at " << gConfig.getStr("SIP.Proxy.Registration"));
 
          //       try {
