@@ -590,7 +590,7 @@ static void handleAuthenticationResponse(SgsnInfo *si, L3GmmMsgAuthenticationRes
                        LOG(ERR)("SIP authentication timed out.  Is the proxy running at " << gConfig.getStr("SIP.Proxy.Registration"));
 
                         // TODO: Reject 
-             //           return;
+                        return;
             //    }
 
 		if (!success) return;
@@ -598,7 +598,7 @@ static void handleAuthenticationResponse(SgsnInfo *si, L3GmmMsgAuthenticationRes
                 LOG(INFO) << "Looking up Kc for imsi " << IMSI;
                 string Kcs = gTMSITable.getKc(IMSI.c_str());
                 if (Kcs.length() <= 1) {
-                        SLOG(ERR)("No Kc found for MS in TMSI table during Attach procedure"<<si);
+                        LOG(ERR)("No Kc found for MS in TMSI table during Attach procedure"<<si);
                         // need to do authentication, send authentication request
                         //sendAuthenticationRequest(si);
                 }
