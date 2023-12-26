@@ -128,7 +128,7 @@ void SgsnInfo::sirm()
 {
 	std::ostringstream ss;
 	sgsnInfoDump(this,ss);
-	LOG(ERR)("Removing SgsnInfo:"<<ss.str());
+	LOG(ERR)<<"Removing SgsnInfo:"<<ss.str();
 	sSgsnInfoList.remove(this);
 	delete this;
 }
@@ -225,7 +225,7 @@ static void GmmRemove(GmmInfo *gmm)
 {
 	std::ostringstream ss;
 	gmmInfoDump(gmm,ss,0);
-	LOG(ERR)("Removing gmm:"<<ss.str());
+	LOG(ERR)<<"Removing gmm:"<<ss.str();
 	SgsnInfo *si;
 	RN_FOR_ALL(SgsnInfoList_t,sSgsnInfoList,si) {
 		// The second test here should be redundant.
@@ -578,7 +578,7 @@ static void handleAuthenticationResponse(SgsnInfo *si, L3GmmMsgAuthenticationRes
           //              success = engine.Register(SIPEngine::SIPRegister, &RAND, IMSI.c_str(), SRESstr.c_str());
           //      }
            //     catch(SIPTimeout) {
-                        LOG(ERR)("SIP authentication timed out.  Is the proxy running at " << gConfig.getStr("SIP.Proxy.Registration"));
+                        LOG(ERR)<<"SIP authentication timed out.  Is the proxy running at " << gConfig.getStr("SIP.Proxy.Registration");
 
          //       try {
             //            SIPEngine engine(gConfig.getStr("SIP.Proxy.Registration").c_str(),IMSI.c_str());
@@ -587,7 +587,7 @@ static void handleAuthenticationResponse(SgsnInfo *si, L3GmmMsgAuthenticationRes
              //           success = engine.Register(SIPEngine::SIPRegister, &RAND, IMSI.c_str(), SRESstr.c_str());
             //    }
             //    catch(SIPTimeout) {
-                       LOG(ERR)("SIP authentication timed out.  Is the proxy running at " << gConfig.getStr("SIP.Proxy.Registration"));
+                       LOG(ERR)<<"SIP authentication timed out.  Is the proxy running at " << gConfig.getStr("SIP.Proxy.Registration");
 
                         // TODO: Reject 
                         return;
@@ -598,7 +598,7 @@ static void handleAuthenticationResponse(SgsnInfo *si, L3GmmMsgAuthenticationRes
                 LOG(INFO) << "Looking up Kc for imsi " << IMSI;
                 string Kcs = gTMSITable.getKc(IMSI.c_str());
                 if (Kcs.length() <= 1) {
-                        LOG(ERR)("No Kc found for MS in TMSI table during Attach procedure"<<si);
+                        LOG(ERR)<<"No Kc found for MS in TMSI table during Attach procedure"<<si;
                         // need to do authentication, send authentication request
                         //sendAuthenticationRequest(si);
                 }
@@ -617,7 +617,7 @@ static void handleIdentityResponse(SgsnInfo *si, L3GmmMsgIdentityResponse &irmsg
 	} else {
 		// The MS sent an attach request.  Try to send the response using the new IMSI.
 		if (! irmsg.mMobileId.isImsi()) {
-			LOG(ERR)("Identity Response message does not include imsi:"<<irmsg.str());
+			LOG(ERR)<<"Identity Response message does not include imsi:"<<irmsg.str();
 			return;
 		}
 		ByteVector passbyreftmp = irmsg.mMobileId.getImsi();		// c++ foo bar
@@ -691,7 +691,7 @@ static void handleAttachRequest(SgsnInfo *si, L3GmmMsgAttachRequest &armsg)
 {
 	switch ((AttachType) (unsigned) armsg.mAttachType) {
 	case AttachTypeGprsWhileImsiAttached:
-		LOG(ERR)("NOTICE attach type "<<(int)armsg.mAttachType <<si);
+		LOG(ERR)<<"NOTICE attach type "<<(int)armsg.mAttachType <<si;
 		// Fall through
 	case AttachTypeGprs:
 		si->mtAttachInfo.mAttachReqType = AttachTypeGprs;
@@ -701,7 +701,7 @@ static void handleAttachRequest(SgsnInfo *si, L3GmmMsgAttachRequest &armsg)
 			// The MS should not have done this.
 			LOG(ERR)<<"Combined Attach attempt incompatible with NMO 1 "<<si;
 		} else {
-			LOG(ERR)("NOTICE attach type "<<(int)armsg.mAttachType <<si);
+			LOG(ERR)<<"NOTICE attach type "<<(int)armsg.mAttachType <<si;
 		}
 		si->mtAttachInfo.mAttachReqType = AttachTypeCombined;
 		break;
@@ -803,7 +803,7 @@ static void handleAttachComplete(SgsnInfo *si, L3GmmMsgAttachComplete &acmsg)
 		// Happens, for example, when you first turn on the bts and the ms
 		// is still trying to complete a previous attach.  Ignore it.
 		// The MS will timeout and try to attach again.
-		LOG(ERR)("Ignoring spurious Attach Complete" << si);
+		LOG(ERR)<<"Ignoring spurious Attach Complete" << si;
 		// Dont send a reject because we did not reject anything.
 		return;
 	}
@@ -1061,7 +1061,7 @@ static void handleL3GmmMsg(SgsnInfo *si,ByteVector &frame1)
 	case L3GmmMsg::AttachRequest: {
 		L3GmmMsgAttachRequest armsg;
 		armsg.gmmParse(frame);
-		LOG(ERR)("Received "<<armsg.str()<<si);
+		LOG(ERR)<<"Received "<<armsg.str()<<si;
 		handleAttachRequest(si,armsg);
 		dumpGmmInfo();
 		break;
@@ -1069,7 +1069,7 @@ static void handleL3GmmMsg(SgsnInfo *si,ByteVector &frame1)
 	case L3GmmMsg::AttachComplete: {
 		L3GmmMsgAttachComplete acmsg;
 		//acmsg.gmmParse(frame);	// not needed, nothing in it.
-		LOG(ERR)("Received "<<acmsg.str()<<si);
+		LOG(ERR)<<"Received "<<acmsg.str()<<si;
 		handleAttachComplete(si,acmsg);
 		dumpGmmInfo();
 		break;
@@ -1077,7 +1077,7 @@ static void handleL3GmmMsg(SgsnInfo *si,ByteVector &frame1)
 	case L3GmmMsg::IdentityResponse: {
 		L3GmmMsgIdentityResponse irmsg;
 		irmsg.gmmParse(frame);
-		LOG(ERR)("Received "<<irmsg.str()<<si);
+		LOG(ERR)<<"Received "<<irmsg.str()<<si;
 		handleIdentityResponse(si,irmsg);
 		break;
 	}
@@ -1093,34 +1093,34 @@ static void handleL3GmmMsg(SgsnInfo *si,ByteVector &frame1)
 	case L3GmmMsg::RoutingAreaUpdateRequest: {
 		L3GmmMsgRAUpdateRequest raumsg;
 		raumsg.gmmParse(frame);
-		LOG(ERR)("Received "<<raumsg.str()<<si);
+		LOG(ERR)<<"Received "<<raumsg.str()<<si;
 		handleRAUpdateRequest(si,raumsg);
 		break;
 	}
 	case L3GmmMsg::RoutingAreaUpdateComplete: {
 		L3GmmMsgRAUpdateComplete racmsg;
 		//racmsg.gmmParse(frame);  not needed
-		LOG(ERR)("Received RAUpdateComplete "<<si);
+		LOG(ERR)<<"Received RAUpdateComplete "<<si;
 		handleRAUpdateComplete(si,racmsg);
 		break;
 	}
 	case L3GmmMsg::GMMStatus: {
 		L3GmmMsgGmmStatus stmsg;
 		stmsg.gmmParse(frame);
-		LOG(ERR)("Received GMMStatus: "<<stmsg.mCause<<"=" <<GmmCause::name(stmsg.mCause)<<si);
+		LOG(ERR)<<"Received GMMStatus: "<<stmsg.mCause<<"=" <<GmmCause::name(stmsg.mCause)<<si;
 		break;
 	}
 	case L3GmmMsg::AuthenticationAndCipheringResp: {
 		L3GmmMsgAuthenticationResponse armsg;
 		armsg.gmmParse(frame);
-		LOG(ERR)("Received AuthenticationAndCipheringResp message "<<si);
+		LOG(ERR)<<"Received AuthenticationAndCipheringResp message "<<si;
 		handleAuthenticationResponse(si,armsg);
 		break;
 	}
 	case L3GmmMsg::ServiceRequest: {
 		L3GmmMsgServiceRequest srmsg;
 		srmsg.gmmParse(frame);
-		LOG(ERR)("Received ServiceRequest message" << si);
+		LOG(ERR)<<"Received ServiceRequest message" << si;
 		handleServiceRequest(si,srmsg);
 		break;
 	}
